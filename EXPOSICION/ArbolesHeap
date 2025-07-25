@@ -1,0 +1,106 @@
+#include <iostream>
+#include <vector>
+
+class MaxHeap {
+private:
+    std::vector<int> heap;  
+   
+    void heapifyDown(int index) {
+        int largest = index;
+        int leftChild = 2 * index + 1;
+        int rightChild = 2 * index + 2;
+
+        
+        if (leftChild < heap.size() && heap[leftChild] > heap[largest]) {
+            largest = leftChild;
+        }
+
+      
+        if (rightChild < heap.size() && heap[rightChild] > heap[largest]) {
+            largest = rightChild;
+        }
+
+       
+        if (largest != index) {
+            std::swap(heap[index], heap[largest]);
+            heapifyDown(largest);  
+        }
+    }
+
+   
+    void heapifyUp(int index) {
+        while (index > 0 && heap[(index - 1) / 2] < heap[index]) {
+            std::swap(heap[index], heap[(index - 1) / 2]);
+            index = (index - 1) / 2;
+        }
+    }
+
+public:
+   
+    void insert(int value) {
+        heap.push_back(value);  
+        heapifyUp(heap.size() - 1);  
+    }
+
+   
+    int extractMax() {
+        if (heap.size() == 0) {
+            throw std::out_of_range("Heap is empty");
+        }
+
+        int max = heap[0];  
+        heap[0] = heap.back();  
+        heap.pop_back(); 
+        heapifyDown(0);  
+
+        return max;
+    }
+
+   
+    int getMax() const {
+        if (heap.size() == 0) {
+            throw std::out_of_range("Heap is empty");
+        }
+        return heap[0];
+    }
+
+  
+    void print() const {
+        for (int val : heap) {
+            std::cout << val << " ";
+        }
+        std::cout << std::endl;
+    }
+
+    
+    int size() const {
+        return heap.size();
+    }
+
+    
+    bool isEmpty() const {
+        return heap.size() == 0;
+    }
+};
+
+int main() {
+    MaxHeap heap;
+
+    
+    heap.insert(10);
+    heap.insert(20);
+    heap.insert(5);
+    heap.insert(30);
+    heap.insert(15);
+
+    std::cout << "Heap: ";
+    heap.print();
+
+    std::cout << "Max value: " << heap.getMax() << std::endl;
+
+    std::cout << "Extracting max: " << heap.extractMax() << std::endl;
+    std::cout << "Heap after extraction: ";
+    heap.print();
+
+    return 0;
+}
